@@ -3,7 +3,7 @@ Ultimamente muito tem se falado no desenvolvimento de código clean, que seja f�
 Este post vai falar um pouco sobre coisas básicas que podemos fazer para deixar os métodos que criamos mais elegantes e agradáveis de ler.
 Um bom começo seria ler este livro, Clean Code: A Handbook of Agile Software Craftsmanship, mas se voce quer algo mais resumido aqui vai:
 
-Meaningful Names:
+* - Meaningful Names:
 
 Quando comecei a programar, não gostava de variaveis e métodos com nomes grandes, eu usava IDE's ruins e nomes grandes tornavam as coisas mais complicadas, eu estava muito errado.
 O tamanho do nome de sua variavel ou método não é grande coisa, o importante é usar intention-revealing names, isto vai ajudar a quem ler ser código já ter uma nocão do que se trata.
@@ -25,8 +25,86 @@ Use uma palavra por conceito, veja por exemplo os seguintes métodos:
 List<Event> fetchAllEvents();
 List<Note> getAllNotes();
 
-Em um método utilizamos a palavra 'fetch' no outro 'get', qual a diferença? Isto pode levar a interpretaçoes erradas. Se os métodos estão fazendo a mesma coisa então use um mesmo nome sempre que o conceito
+Em um método utilizamos a palavra 'fetch' no outro 'get', qual a diferença? Isto pode levar a interpretaçoes erradas. Se os métodos estão fazendo a mesma coisa então use um mesmo nome sempre que o conceito for usado.
 
+
+* - Caracteristicas do método:
+
+Sério, existe algo mais desanimador que saber que existe um BUG dentro de um método gigante, que faz um monte de coisa? Eu sempre me pergunto se posso reescrever o método, porém o fato de ele ser grande também implica que provavelmente ele esteja fazendo algo que eu nem imagine.
+
+Tamanho:
+Faça seus métodos pequenos! Quão pequeno? Menor do que esteja pensando! 
+No livro o autor diz que dificilmente seus métodos deveriam ser maiores que 20 LINHAS! Eu procuro seguir este limite e sinto que os métodos ficam mais simples de entender.
+
+Faça uma coisa e evite efeitos colaterais:
+As vezes criamos métodos que fazem mais de uma coisa, muitas vezes nem percebemos, veja o seguinte metodo:
+
+	public boolean validateCredentials(String email, String senha){
+		boolean isCorrectCredentials = server.validadeCredentials(email, senha);
+		if(isCorrectCredentials){
+			login();
+		}
+		return isCorrectCredentials;
+	}
+
+Este método, apesar de ser pequeno e possuir intention-revealing names, está fazendo mais de uma coisa e possui efeito colateral(realiza login). Isto pode causar um resultado inexperado, caso algum desenvolvedor ao ler o método, utilize-o apenas para validar se credenciais estão corretas sem necessariamente querer o login. Uma solução um pouco mais elegante seria:
+
+	public void loginFlow(String email, String password){
+		boolean isCorrectCredentials = validateCredentials(email, password);
+		if(isCorrectCredentials){
+			login();
+		} else {
+			// whatever 
+		}		
+	}
+
+	public boolean validateCredentials(String email, String password){
+		return server.validateCredentials(email, password);
+	}
+Desta maneira, o método validateCredentials, apenas valida as credenciais, sem efeito colateral.
+
+* - Blocks and Abstraction Levels:
+Um método elegante não possui muitos blocos(if/else/while) encadeados. Um método que possui apenas 1 ou 2 blocos encadeados é mais fácil de ler pois existe menos caminhos a se percorrer, desta forma fica mais difícil ocorrer bugs e falhas. 
+
+Cada método deve possuir um nível de abstração, veja o exemplo:
+	
+	public boolean saveNote(String date, String text){
+		String finalText = noteText.append("\n");
+		finalText.append(date);
+		Note note = Note.from(finalText);
+		return server.saveNote(note);
+	}
+Este método utiliza níveis de abstrações diferentes, existem conceitos de alto nível, como o construtor estático Note.from() e de baixo nível, como a operação de append("\n"). Misturar diferentes níveis de abstração em um mesmo método torna-o mais confuso e difícil de ler.
+
+
+* - Parametros dos métodos:
+	Seria muito bom se todos os métodos que utilizássemos não fosse preciso passar nenhum parâmetro, não teríamos que nos preocupar sobre o tipo, valores default e estado dos mesmo.
+	Tente passar a menor quantidade de parametros possível, se um método requer mais que 3 parâmetros provavelmente ele esteja fazendo mais que uma coisa, então é possível quebrar em métodos menores.
+	Veja o seguinte exemplo:
+
+	public boolean scheduleRomanticDinner(String name1, String name2, int table, Date time){
+		boolean isTableAvailable = isTableAvailableAtTime(table, time);
+		if(isTableAvailable){
+			confirmSchedule(name1, name2, table, time);
+		} else {
+			//whatever
+		}
+	}
+
+	O método acima está usando as 4 variáveis, como remover a necessidade dos parâmetros?
+	Crie um 'Argument Object', isto é, um objeto que possua estas quatro variáveis, veja o resultado:
+
+	public boolean scheduleRomanticDinner(RomanticDinnerRequest request){
+		boolean isTableAvailable = isTableAvailableAtTime(request.table(), request.time());
+		if(isTableAvailable){
+			confirmSchedule(request.name1(), request.name2(), request.table(), request.time());
+		} else {
+			//whatever
+		}
+	}
+	Quais os benefícios de criar um 'Argument Object'? Imagine que o método scheduleRomanticDinner esteja sendo usado 100 vezes no código, o que aconteceria se, fosse necessário passar um parametro a mais? O método terá que ser reescrito nos 100 lugares onde foi chamado. Já com o Argument Object, esta mudança afetaria apenas o construtor do objeto.
+
+	Enfim, todas estas práticas visam em geral deixar o código mais simples, fácil de ser entendido e adaptado, pois sabemos que as mudanças sempre ocorrem, não podemos deixar que pequenas mudanças afetem toda a estrutura de um código, afinal mudanças são uma das poucas certeza que temos em desenvolvimento de software. 
 
 
 
