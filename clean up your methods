@@ -1,0 +1,33 @@
+Limpe seus métodos!
+Ultimamente muito tem se falado no desenvolvimento de código clean, que seja fácil de ler e dar manutenção, um código que seja bonito, elegante e mais importante, não vai fazer ninguem ter 'bad times' reading it.
+Este post vai falar um pouco sobre coisas básicas que podemos fazer para deixar os métodos que criamos mais elegantes e agradáveis de ler.
+Um bom começo seria ler este livro, Clean Code: A Handbook of Agile Software Craftsmanship, mas se voce quer algo mais resumido aqui vai:
+
+Meaningful Names:
+
+Quando comecei a programar, não gostava de variaveis e métodos com nomes grandes, eu usava IDE's ruins e nomes grandes tornavam as coisas mais complicadas, eu estava muito errado.
+O tamanho do nome de sua variavel ou método não é grande coisa, o importante é usar intention-revealing names, isto vai ajudar a quem ler ser código já ter uma nocão do que se trata.
+Um exemplo ruim seria:
+
+int d; // time in days
+int gtmsp;
+
+O que significa 'd' na vida real? Imagine que esta variável 'd' esteja sendo usada em um trecho longe de sua inicialização, o leitor terá que voltar a onde a variavel foi declarada para saber do que se trata? Muito melhor seria, sem a necessidade de comentários:
+
+int timeInDays;
+
+Procure usar nomes pronunciáveis, somos bons em reconhecer palavras, como ler 'gtmsp'? Prefira:
+
+int generatedTimestamp;
+
+Use uma palavra por conceito, veja por exemplo os seguintes métodos:
+
+List<Event> fetchAllEvents();
+List<Note> getAllNotes();
+
+Em um método utilizamos a palavra 'fetch' no outro 'get', qual a diferença? Isto pode levar a interpretaçoes erradas. Se os métodos estão fazendo a mesma coisa então use um mesmo nome sempre que o conceito
+
+
+
+
+
