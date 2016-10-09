@@ -1,5 +1,5 @@
 Limpe seus métodos!
-Ultimamente muito tem se falado no desenvolvimento de código clean, que seja fácil de ler e dar manutenção, um código que seja bonito, elegante e mais importante, não vai fazer ninguem ter 'bad times' reading it.
+Ultimamente muito tem se falado no desenvolvimento de código clean, que seja fácil de ler e dar manutenção, um código que seja bonito e elegante, mais importante ainda, não vai fazer ninguem ter 'bad times' reading it.
 Este post vai falar um pouco sobre coisas básicas que podemos fazer para deixar os métodos que criamos mais elegantes e agradáveis de ler.
 Um bom começo seria ler este livro, Clean Code: A Handbook of Agile Software Craftsmanship, mas se voce quer algo mais resumido aqui vai:
 
@@ -32,7 +32,7 @@ Em um método utilizamos a palavra 'fetch' no outro 'get', qual a diferença? Is
 
 Sério, existe algo mais desanimador que saber que existe um BUG dentro de um método gigante, que faz um monte de coisa? Eu sempre me pergunto se posso reescrever o método, porém o fato de ele ser grande também implica que provavelmente ele esteja fazendo algo que eu nem imagine.
 
-Tamanho:
+Tamanho: 
 Faça seus métodos pequenos! Quão pequeno? Menor do que esteja pensando! 
 No livro o autor diz que dificilmente seus métodos deveriam ser maiores que 20 LINHAS! Eu procuro seguir este limite e sinto que os métodos ficam mais simples de entender.
 
@@ -64,13 +64,12 @@ Este método, apesar de ser pequeno e possuir intention-revealing names, está f
 Desta maneira, o método validateCredentials, apenas valida as credenciais, sem efeito colateral.
 
 * - Blocks and Abstraction Levels:
-Um método elegante não possui muitos blocos(if/else/while) encadeados. Um método que possui apenas 1 ou 2 blocos encadeados é mais fácil de ler pois existe menos caminhos a se percorrer, desta forma fica mais difícil ocorrer bugs e falhas. 
+Um método elegante não possui muitos blocos(if/else/while) encadeados. Um método que possui apenas 1 ou 2 blocos encadeados é mais fácil de ler pois existe menos caminhos a se percorrer, desta forma fica mais difícil para os bugs e falhas se esconderem. 
 
 Cada método deve possuir um nível de abstração, veja o exemplo:
 	
 	public boolean saveNote(String date, String text){
-		String finalText = noteText.append("\n");
-		finalText.append(date);
+		String finalText = noteText.append("\n").append(date);
 		Note note = Note.from(finalText);
 		return server.saveNote(note);
 	}
@@ -104,7 +103,7 @@ Este método utiliza níveis de abstrações diferentes, existem conceitos de al
 	}
 	Quais os benefícios de criar um 'Argument Object'? Imagine que o método scheduleRomanticDinner esteja sendo usado 100 vezes no código, o que aconteceria se, fosse necessário passar um parametro a mais? O método terá que ser reescrito nos 100 lugares onde foi chamado. Já com o Argument Object, esta mudança afetaria apenas o construtor do objeto.
 
-	Enfim, todas estas práticas visam em geral deixar o código mais simples, fácil de ser entendido e adaptado, pois sabemos que as mudanças sempre ocorrem, não podemos deixar que pequenas mudanças afetem toda a estrutura de um código, afinal mudanças são uma das poucas certeza que temos em desenvolvimento de software. 
+	Enfim, todas estas práticas visam em geral deixar o código mais simples, fácil de ser entendido e adaptado, pois sabemos que os requisitos vão ser alterado, não podemos deixar que pequenas mudanças afetem toda a estrutura de um código, afinal mudanças são uma das poucas certezas que temos em desenvolvimento de software. 
 
 
 
