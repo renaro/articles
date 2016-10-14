@@ -1,3 +1,52 @@
+Clean up your methods!
+Lately we have been seeing a lot about clean code, a code that is easy to read and maintain, a code that is elegant and even more important, a code that won't make other programmers having a bad time reading/maintaining it.
+This post is about basic changes we can do to make the methods we create more elegant and easy to understand.
+A good start would be reeding this book, Clean Code: A Handbook of Agile Software Craftmanship, but if you want a little bit of it more summarized here we go:
+
+- Meaningful Names:
+When I first started to program, I didn't like variables and methods with big names, I used to code within bad IDE's and big names made things more complicated, but I was wrong.
+The name's length of your methods/variable is not a big deal(when coding in a good IDE), the most important is the choose intention-revealing names, this will help whom is reading your code to make an idea of what it is about.
+A BAD example would be:
+
+int d; // time in days
+int gtmsp;
+
+What does it mean 'd' in the real life? Imagine that this variable 'd' is being used somewhere far away from its initialization, the reader would have to go back to its initialization, read the comment to understand what this variable is about? 
+Try to choose pronounceable names, we are good at recognizing words, how to read 'gtmsp'? I would rather read:
+
+int timeInDays;
+int generatedTimestamp;
+
+Choose one word for concept, see the following example:
+
+List<Event> fetchAllEvents();
+List<Note> getAllNotes();
+
+In one method we choose the word 'fetch' in the other we choose the word 'get', what is the difference between these methods? Aren't they doing the same action? When we read different names/words we tend to infer that they are doing different things, this may lead to miss interpretation. If the methods are doing the same action/concept choose the same word to this action.
+
+ - Size matters!
+
+ Seriusly, is there something worse than trying to find a BUG within someone's big messy method? I always think about rewriting it before I remember that it may be doing things I would never imagine.
+
+ Make your methods small! How small? Smaller than you think!
+ In the book the author says that hardly your methods would need more than 20 LINES. I try to follow this bounds and I feel like they become easier to read. Break big methods into smaller ones.
+
+ - Do one thing! No side effects!
+
+ Sometimes we create methods that do more than one thing, 
+
+
+
+
+--------------------------------
+
+
+Faça uma coisa e evite efeitos colaterais:
+As vezes criamos métodos que fazem mais de uma coisa, muitas vezes nem percebemos, veja o seguinte metodo:
+
+--------------------------------
+
+
 Limpe seus métodos!
 Ultimamente muito tem se falado no desenvolvimento de código clean, que seja fácil de ler e dar manutenção, um código que seja bonito e elegante, mais importante ainda, não vai fazer ninguem ter 'bad times' reading it.
 Este post vai falar um pouco sobre coisas básicas que podemos fazer para deixar os métodos que criamos mais elegantes e agradáveis de ler.
