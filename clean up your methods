@@ -1,10 +1,10 @@
 Clean up your methods!
-Lately we have been seeing a lot about clean code, a code that is easy to read and maintain, a code that is elegant and even more important, a code that won't make other programmers having a bad time reading/maintaining it.
+Lately we have been seeing a lot about clean code, a code that is easy to read and maintain, a code that is elegant and even more important, that won't make other programmers having a bad time reading/maintaining it.
 This post is about basic changes we can do to make the methods we create more elegant and easy to understand.
-A good start would be reeding this book, Clean Code: A Handbook of Agile Software Craftmanship, but if you want a little bit of it more summarized here we go:
+A good start would be reeding this book, Clean Code: A Handbook of Agile Software Craftmanship, but if you want something more summarized here we go:
 
 - Meaningful Names:
-When I first started to program, I didn't like variables and methods with big names, I used to code within bad IDE's and big names made things more complicated, but I was wrong.
+When I first started to code, I didn't like variables and methods with big names, I used to code within bad IDE's and big names made things more complicated, but I was wrong.
 The name's length of your methods/variable is not a big deal(when coding in a good IDE), the most important is the choose intention-revealing names, this will help whom is reading your code to make an idea of what it is about.
 A BAD example would be:
 
@@ -28,21 +28,88 @@ In one method we choose the word 'fetch' in the other we choose the word 'get', 
 
  Seriusly, is there something worse than trying to find a BUG within someone's big messy method? I always think about rewriting it before I remember that it may be doing things I would never imagine.
 
- Make your methods small! How small? Smaller than you think!
+ So make your methods small! How small? Smaller than you think!
  In the book the author says that hardly your methods would need more than 20 LINES. I try to follow this bounds and I feel like they become easier to read. Break big methods into smaller ones.
 
  - Do one thing! No side effects!
 
- Sometimes we create methods that do more than one thing, 
+ Sometimes we create methods that do more than one thing and we don't even realize that, see the following method:
+
+public boolean validateCredentials(String email, String senha){
+	boolean isCorrectCredentials = server.validadeCredentials(email, senha);
+	if(isCorrectCredentials){
+		login();
+	}
+	return isCorrectCredentials;
+}
+
+Even though this method is small and with intention-revealing names, it is doing more than one thing and there is a side-effect(login) calling it. It could bring unexpected results in case a developer decide to call it just to 'validateCredentials', it is not obvious that this method is making a login. A more elegant solution would be:
+
+	public void loginFlow(String email, String password){
+		boolean isCorrectCredentials = validateCredentials(email, password);
+		if(isCorrectCredentials){
+			login();
+		} else {
+			// whatever 
+		}		
+	}
+
+	public boolean validateCredentials(String email, String password){
+		return server.validateCredentials(email, password);
+	}
+
+This way, the method 'validateCRedentials' is only validating credentials, no side effect.
+
+* - Blocks and Abstraction Levels:
+A clean method do not have a lot channing blocks(if/else/while), it has a low cyclomatic complexity. A method that have only 1 or 2 blocks is easier to read since there is less paths to follow, this way the code is less susceptible to errors making it hard for bugs to hide.
+
+Every method should only have one abstraction level, see the example:
+
+	public boolean saveNote(String date, String text){
+		String finalText = text.append("\n").append(date);
+		Note note = Note.from(finalText);
+		return server.saveNote(note);
+	}
+
+This method has different abstraction levels. There is a high level concept, the static constructor 'Note.from' and also a call to a 'server.saveNote()', it means that the implementation of this concepts are hidden from us, we don't really need to understand it, that is a high abstraction level.
+There is also a low abstraction level, the method 'append' is modifying a string by appending a '\n' and the date into the original String, we can see the real implementation here, it is not hidden, which means that this concept is a low abstraction level.
+
+When you mix different levels of abstraction the method becomes more dificult to read.
+
+* - Methods Parameters:
+It would be very good if all the methods we call didn't have any parameter, we wouldn't have to worry about its type, default values and state and so on.
+So try to build your methods so they require the least parameters as possible. If one method requires more than 3 parameters probably it is doing more than ONE THING, so try to break it into smaller methods. See the following example:
+
+	public boolean scheduleRomanticDinner(String name1, String name2, int table, Date time){
+		boolean isTableAvailable = isTableAvailableAtTime(table, time);
+		if(isTableAvailable){
+			server.confirmSchedule(name1, name2, table, time);
+		} else {
+			//whatever
+		}
+	}
+
+	This method is small and clean but it is using its 4 parameters, how to remove the need of all of them?
+	Create an 'Argument Object', that is a object that holds this 4 parameters, see the result:
+
+	public boolean scheduleRomanticDinner(RomanticDinnerRequest request){
+		boolean isTableAvailable = isTableAvailableAtTime(request.table(), request.time());
+		if(isTableAvailable){
+			server.confirmSchedule(request.name1(), request.name2(), request.table(), request.time());
+		} else {
+			//whatever
+		}
+	}
+
+What are the benefits of an Argument Object? Imagine that the method 'scheduleRomanticDinner' is being called 100 times within the code, what would happen if it was required to add one more parameter? This method would have to be rewritten 100 times. Using a Argument Object this change will affect only the object initialization.
+
+All this practices aim to make it easier for your code to be changed and read, we know that new requirements will come up and scopes will be changed, we can not allow that small changes affect the structure we have build, by the end of the day changes are one of the few centanties we have at Software Development.
 
 
 
 
---------------------------------
 
 
-Faça uma coisa e evite efeitos colaterais:
-As vezes criamos métodos que fazem mais de uma coisa, muitas vezes nem percebemos, veja o seguinte metodo:
 
 --------------------------------
 
