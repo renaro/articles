@@ -11,6 +11,9 @@ A BAD example would be:
 int d; // time in days
 int gtmsp;
 
+
+
+
 What does it mean 'd' in the real life? Imagine that this variable 'd' is being used somewhere far away from its initialization, the reader would have to go back to its initialization, read the comment to understand what this variable is about? 
 Try to choose pronounceable names, we are good at recognizing words, how to read 'gtmsp'? I would rather read:
 
